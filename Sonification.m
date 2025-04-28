@@ -149,7 +149,7 @@ function ScaleIndices = Sonification(yData,StartingSeq,Key,SeqLength,FileName,fl
     if flag==1
         command=['abcm2ps ', FileName];
         system(command);
-        command=['ps2pdf ', FileName, '.pdf'];
+        command=['ps2pdf Out.ps ', FileName, '.pdf'];
         system(command);
     end
 
