@@ -1,4 +1,4 @@
-function ScaleIndices = Sonification(yData,StartingSeq,Key,SeqLength,FileName,flag)
+function [ScaleIndices,NewScale] = Sonification(yData,StartingSeq,Key,SeqLength,FileName,flag)
 
 % Function that transforms any dataseries (preferably a multiple of 8 or 16
 % data points) into a musical sequence.
