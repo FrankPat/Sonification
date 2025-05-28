@@ -3,8 +3,8 @@ function signal=Data2Music(data,startx,endx,sequence,startseq, ...
 
 % Function that reads a two column data vector with x and y values, where x
 % is commonly taken as time in a time series, and interpolates a sequence
-% of 'sequence' number of notes between 'startseq' and 'endseq'. The
-% function calls firt the Sonification function that outputs
+% of 'sequence' number of notes between 'startx' and 'endx'. The
+% function calls first the Sonification function that outputs
 % 'ScaleIndices', i.e., the number of the notes within the chosen scale, as
 % well as 'NewScale', which are the frequencies that correspond to each of
 % the chosen major scale. In a next step a sound signal is produced, using
