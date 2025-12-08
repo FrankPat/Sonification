@@ -1,4 +1,4 @@
-# Sonification
+# Sonification: climate grooves
 
 Function that transforms any dataseries (preferably a multiple of 8 or 16
 data points) into a musical sequence.
