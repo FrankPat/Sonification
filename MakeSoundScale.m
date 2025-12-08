@@ -1,10 +1,7 @@
-function signal=MakeSoundScale(NewScale,ScaleIndices,fs,duration,octave)
+function signal=MakeSoundScale(NewScale,ScaleIndices,fs,duration)
 
 % Function that translates the sequence in a sound signal that can be
-% played with the 'sound' function in MatLab. Multiple sound sequences can
-% be combined, that is why the octave function determines on which octave
-% the sequence will be played. 'ocetave' is 1 (default) or 0.5 if a lower
-% octave or 2 if a higher octave.
+% played with the 'sound' function in MatLab.
 %
 %
 % MIT License
@@ -42,7 +39,7 @@ function signal=MakeSoundScale(NewScale,ScaleIndices,fs,duration,octave)
 
     signal = [];
     for i = 1:length(ScaleIndices)
-        freq = NewScale(ScaleIndices(i))*octave; % Map to frequency
+        freq = NewScale(ScaleIndices(i)); % Map to frequency
         tone = sin(2 * pi * freq * t); % Generate sine wave
         % Apply fade-in and fade-out
         tone(1:fadeSamples) = tone(1:fadeSamples) .* fadeIn;

@@ -10,15 +10,6 @@ function SonifExample2
     clear;
     close all;
 
-    sequence=32; % Length of the sequence (16,32,64, ...)
-    startseq=2; % Note in scale on which to start the sequence (1-7)
-    key={'F'}; % 12 keys to chose from (no sharps, only flats)
-    span =14; % Tonal span of the sequence (14 = 2 octaves)
-    fs = 44100;
-    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
-    abc=0; % Write output on pdf file using abc software
-
-
 % In this example, the Key is F major (FM7), resulting in B flat as 
 % key signatures. The key is similar to CGminor 7 (Gm7), so if
 % you want a minor key, you need to provide the key of the associated major
@@ -29,19 +20,25 @@ function SonifExample2
 % the ice mass change of the Antarctic ice sheet and one of the Greenland
 % ice sheet. Both span a time series from 1992 to 2018 and are taken from
 % imbie.org. The y-data are reversed, meaning that a high pitch leads to
-% more mass loss (which originally is taken as a negative value). The first
-% series is played on the normal octave (octave=1), while the second series
-% one octave higher (octave=2).
+% more mass loss (which originally is taken as a negative value).
+
+    sequence=32; % Length of the sequence (16,32,64, ...)
+    lowest=2; % Note in scale on which to start the sequence (1-7)
+    key={'F'}; % 12 keys to chose from (no sharps, only flats)
+    span =14; % Tonal span of the sequence (14 = 2 octaves)
+    fs = 44100;
+    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
+    abc=0; % Write output on pdf file using abc software
 
     data=load('ImbieAntarctica.txt');
     data(:,2)=-data(:,2);
-    signal1=Data2Music(data,1992,2018,sequence,startseq, ...
-        key,span,fs,duration,0.5,'AIS',abc);
+    signal1=Data2Music(data,1992,2018,sequence,lowest, ...
+        key,span,fs,duration,'AIS',abc);
 
     data=load('ImbieGreenland.txt');
     data(:,2)=-data(:,2);
-    signal2=Data2Music(data,1992,2018,sequence,startseq, ...
-        key,span,fs,duration,1,'GrIS',abc);
+    signal2=Data2Music(data,1992,2018,sequence,lowest, ...
+        key,span,fs,duration,'GrIS',abc);
 
     % Combine the signals
     CombinedSignal = signal1 + signal2;
