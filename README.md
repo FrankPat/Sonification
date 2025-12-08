@@ -7,7 +7,7 @@ INPUT
 
 yData       =  one-dimensional vector containing numeric (eral) data
 
-StartingSeq =  note in the chosen scale on which to start the sequence (1-7)
+lowest      =  lowest note in the chosen scale (1-7)
 
 Key         =  major key of the sequence (C, Db, D, Eb, ...)
 
