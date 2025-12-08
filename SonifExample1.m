@@ -47,11 +47,8 @@ function SonifExample1
     signal=Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
         key,span,fs,duration,'ENSO',abc);
 
-    for i=1:2
-        % Play the combined signal
-        sound(signal, fs);
-        pause(sequence*duration+0.55);
-    end
+    sound(signal, fs);
+
     
 end
 

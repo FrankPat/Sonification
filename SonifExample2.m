@@ -44,12 +44,8 @@ function SonifExample2
     CombinedSignal = signal1 + signal2;
     % Normalize the combined signal to prevent clipping
     CombinedSignal = CombinedSignal / max(abs(CombinedSignal));
-
-    for i=1:2
-        % Play the combined signal
-        sound(CombinedSignal, fs);
-        pause(sequence*duration+1);
-    end
+    
+    sound(CombinedSignal, fs);
     
 end
 
