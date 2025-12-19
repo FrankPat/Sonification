@@ -31,12 +31,13 @@ function SonifExample1
 % file), as well as audition. Many different free tools are available on 
 % https://abc.rectanglered.com/
 
-    sequence=32; % Length of the sequence (16,32,64, ...)
+    sequence=64; % Length of the sequence (16,32,64, ...)
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'Bb'}; % 12 keys to chose from (no sharps, only flats)
     span=14; % Tonal span of the sequence (14 = 2 octaves)
     fs = 44100;
     duration=1/4; % 1/4 notes @ 90 bpm = 1/6
+    IPmethod=1;
     abc=1; % Use locally installed abc program to make a PDF file with sheet
            % music. (1 or 0)
 
@@ -45,7 +46,7 @@ function SonifExample1
     % Interpolate the time sequence to the sepcified number of steps definied
     % by sequence
     signal=Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
-        key,span,fs,duration,'ENSO',abc);
+        key,span,fs,duration,'ENSO',IPmethod,abc);
 
     sound(signal, fs);
 

@@ -1,5 +1,5 @@
-function [ScaleIndices,NewScale] = Sonification(yData,LowestSeq,Key, ...
-    SeqLength,FileName,flag)
+function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
+    SeqLength,FileName,IPmethod,flag)
 
 % Function that transforms any dataseries (preferably a multiple of 8 or 16
 % data points) into a musical sequence.
@@ -10,9 +10,11 @@ function [ScaleIndices,NewScale] = Sonification(yData,LowestSeq,Key, ...
 % Key         =  major key of the sequence (C, Db, D, Eb, ...)
 % SeqLength   =  tonal span of the sequence (14 = 2 octaves)
 % FileName    =  name of outputfile (without extension)
+% IPmethod    =  mapping method: 1: frequency; 2: logarithmic frequency
+%                  (linear scale); 3: equidistant
 % flag        =  0: only abc output file is created
 %                1: abc software and ps2pdf is executed to produce a pdf
-%                file with sheet music
+%                   file with sheet music
 %
 % OUTPUT
 % Text file written with musical written in abc notation
@@ -76,11 +78,11 @@ function [ScaleIndices,NewScale] = Sonification(yData,LowestSeq,Key, ...
     end
     
     % abc notation corresponding to matrix Scales
-    strCell = {'C,,', 'D,,', 'E,,', 'F,,', 'G,,', 'A,,', 'B,,', ...
-        'C,', 'D,', 'E,', 'F,', 'G,', 'A,', 'B,', ...
-        'C', 'D', 'E', 'F', 'G', 'A', 'B', ...
-        'c', 'd', 'e', 'f', 'g', 'a', 'b', ...
-        'c''', 'd''', 'e''', 'f''', 'g''', 'a''', 'b'''};
+    strCell = {'C,,','D,,','E,,','F,,','G,,','A,,','B,,', ...
+        'C,','D,','E,','F,','G,','A,','B,', ...
+        'C','D','E','F','G','A','B', ...
+        'c','d','e','f','g','a','b', ...
+        'c''','d''','e''','f''','g''','a''','b'''};
     strArray=string(strCell);
     
     ScaleStart=[1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 7];
@@ -94,13 +96,27 @@ function [ScaleIndices,NewScale] = Sonification(yData,LowestSeq,Key, ...
         strt=strt+7;
         stop=stop+7;
     end
-    NewScale=ScaleFreq(ScaleChoice,strt:stop);
+    NewScale=Scales(ScaleChoice,strt:stop);
+    NewFreq=ScaleFreq(ScaleChoice,strt:stop);
     NewArray=NewString(ScaleChoice,strt:stop);
 
     yMin = min(yData);
     yMax = max(yData);
-    ScaleIndices = round(1 + (yData - yMin) / (yMax - yMin) * ...
-        (length(NewScale) - 1));
+    if IPmethod==2 % log(frequency)
+        InterpFreq=(yData-yMin)*(log(NewFreq(end))-log(NewFreq(1)))/ ...
+            (yMax-yMin)+log(NewFreq(1));
+        InterpNotes=round((InterpFreq-log(f0))*12/log(2));
+    elseif IPmethod==1 % frequency
+        InterpFreq=(yData-yMin)*(NewFreq(end)-NewFreq(1))/(yMax-yMin)+NewFreq(1);
+        InterpNotes=round((log(InterpFreq)-log(f0))*12/log(2));
+    end
+    if IPmethod<=2
+        closestVals = round(interp1(NewScale, NewScale, InterpNotes, 'nearest'));
+        [~, ScaleIndices] = ismember(closestVals, NewScale);
+    else % equidistant notes
+        ScaleIndices = round(1 + (yData - yMin) / (yMax - yMin) * ...
+            (length(NewScale) - 1));
+    end
 
     command=[FileName, '.abc'];
     outfile=fopen(command,'w');

@@ -1,4 +1,4 @@
-function signal=MakeSoundScale(NewScale,ScaleIndices,fs,duration)
+function signal=MakeSoundScale(NewFreq,ScaleIndices,fs,duration)
 
 % Function that translates the sequence in a sound signal that can be
 % played with the 'sound' function in MatLab.
@@ -39,7 +39,7 @@ function signal=MakeSoundScale(NewScale,ScaleIndices,fs,duration)
 
     signal = [];
     for i = 1:length(ScaleIndices)
-        freq = NewScale(ScaleIndices(i)); % Map to frequency
+        freq = NewFreq(ScaleIndices(i)); % Map to frequency
         tone = sin(2 * pi * freq * t); % Generate sine wave
         % Apply fade-in and fade-out
         tone(1:fadeSamples) = tone(1:fadeSamples) .* fadeIn;

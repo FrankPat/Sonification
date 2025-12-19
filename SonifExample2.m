@@ -26,22 +26,23 @@ function SonifExample2
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'F'}; % 12 keys to chose from (no sharps, only flats)
     span =14; % Tonal span of the sequence (14 = 2 octaves)
+    IPmethod=3;
     fs = 44100;
     duration=1/4; % 1/4 notes @ 90 bpm = 1/6
-    abc=0; % Write output on pdf file using abc software
+    abc=1; % Write output on pdf file using abc software
 
     data=load('ImbieAntarctica.txt');
     data(:,2)=-data(:,2);
     signal1=Data2Music(data,1992,2018,sequence,lowest, ...
-        key,span,fs,duration,'AIS',abc);
+        key,span,fs,duration,'AIS',logscale,abc);
 
     data=load('ImbieGreenland.txt');
     data(:,2)=-data(:,2);
     signal2=Data2Music(data,1992,2018,sequence,lowest, ...
-        key,span,fs,duration,'GrIS',abc);
+        key,span,fs,duration,'GrIS',logscale,abc);
 
     % Combine the signals
-    CombinedSignal = signal1 + signal2;
+    CombinedSignal = signal1;% + signal2;
     % Normalize the combined signal to prevent clipping
     CombinedSignal = CombinedSignal / max(abs(CombinedSignal));
     
