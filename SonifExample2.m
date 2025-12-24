@@ -26,7 +26,7 @@ function SonifExample2
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'F'}; % 12 keys to chose from (no sharps, only flats)
     span =14; % Tonal span of the sequence (14 = 2 octaves)
-    IPmethod=2;
+    IPmethod=2; % Interpolation method (1-3)
     abc=1; % Write output on pdf file using abc software
 
     data=load('ImbieAntarctica.txt');

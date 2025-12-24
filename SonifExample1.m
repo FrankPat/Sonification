@@ -26,7 +26,7 @@ function SonifExample1
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'Bb'}; % 12 keys to chose from (no sharps, only flats)
     span=14; % Tonal span of the sequence (14 = 2 octaves)
-    IPmethod=2;
+    IPmethod=2; % Interpolation method (1-3)
     abc=1; % Use locally installed abc program to make a PDF file with sheet
            % music. (1 or 0)
 
