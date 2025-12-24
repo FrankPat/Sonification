@@ -1,5 +1,5 @@
-function signal=Data2Music(data,startx,endx,sequence,lowest, ...
-    key,span,fs,duration,outfile,IPmethod,abc)
+function [signal,fs]=Data2Music(data,startx,endx,sequence,lowest, ...
+    key,span,outfile,IPmethod,abc)
 
 % Function that reads a two column data vector with x and y values, where x
 % is commonly taken as time in a time series, and interpolates a sequence
@@ -35,6 +35,9 @@ function signal=Data2Music(data,startx,endx,sequence,lowest, ...
 % TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 % SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
+
+    fs = 44100;
+    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
 
     % Interpolate the time sequence to the sepcified number of steps definied
     % by sequence

@@ -5,8 +5,8 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
 % data points) into a musical sequence.
 %
 % INPUT
-% yData       =  one-dimensional vector containing numeric (eral) data
-% StartingSeq =  note in the chosen scale on which to start the sequence (1-7)
+% yData       =  one-dimensional vector containing numerical data
+% StartingSeq =  lowest note in the chosen scale (1-7), where 1 = C in the scale of C
 % Key         =  major key of the sequence (C, Db, D, Eb, ...)
 % SeqLength   =  tonal span of the sequence (14 = 2 octaves)
 % FileName    =  name of outputfile (without extension)
@@ -17,7 +17,7 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
 %                   file with sheet music
 %
 % OUTPUT
-% Text file written with musical written in abc notation
+% Filename.abc: Text file written with musical written in abc notation
 % (https://abcnotation.com/). The file has the extension '.abc'
 % If 'flag=1', the abc2ps programme will be executed and a pdf file created
 % with the sheet music. This requires installation of the abc notation
@@ -25,6 +25,13 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
 % Alternatively the .abc file can be transformed into sheet music using
 % online abc tools (see https://abcnotation.com/ for more info).
 %
+% Filename.mid: MIDI file with output of the track that can be imported in
+% a DAW (using subroutines listed below).
+%
+% Filename.mat: Matrix M with basic MIDI information for further editing.
+% Can be translated into a MIDI file with the commands
+% midi=matrix2midi(M) and writemidi(midi, midifile), taken from 
+% https://kenschutte.com/midi/ and https://github.com/kts/matlab-midi/
 %
 %
 % MIT License
@@ -102,13 +109,13 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
 
     yMin = min(yData);
     yMax = max(yData);
-    if IPmethod==2 % log(frequency)
+    if IPmethod==1 % frequency
+        InterpFreq=(yData-yMin)*(NewFreq(end)-NewFreq(1))/(yMax-yMin)+NewFreq(1);
+        InterpNotes=round((log(InterpFreq)-log(f0))*12/log(2));
+    elseif IPmethod==2 % log(frequency)
         InterpFreq=(yData-yMin)*(log(NewFreq(end))-log(NewFreq(1)))/ ...
             (yMax-yMin)+log(NewFreq(1));
         InterpNotes=round((InterpFreq-log(f0))*12/log(2));
-    elseif IPmethod==1 % frequency
-        InterpFreq=(yData-yMin)*(NewFreq(end)-NewFreq(1))/(yMax-yMin)+NewFreq(1);
-        InterpNotes=round((log(InterpFreq)-log(f0))*12/log(2));
     end
     if IPmethod<=2
         closestVals = round(interp1(NewScale, NewScale, InterpNotes, 'nearest'));
@@ -116,8 +123,27 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
     else % equidistant notes
         ScaleIndices = round(1 + (yData - yMin) / (yMax - yMin) * ...
             (length(NewScale) - 1));
+        closestVals = NewScale(ScaleIndices);
     end
+    
+    
+    % MIDI output
+    M = zeros(length(yData),6);
+    [~,locs] = findpeaks(yData);
+    M(:,1) = 1;         % all in track 1
+    M(:,2) = 1;         % all in channel 1
+    M(:,3) = closestVals+69;      % note numbers (69 is A4)
+    M(:,4) = zeros(length(yData),1)+80;  % lets have volume at 80
+    M(locs,4) = 120; % set accents for peaks in sequence
+    M(:,5) = (0:0.25:0.25*(length(yData)-1))';  % note on:  notes start every .25 seconds
+    M(:,6) = M(:,5)+0.25;   % note off: each note has duration .25 seconds
+    midi=matrix2midi(M);
+    midifile=[FileName, '.mid'];
+    writemidi(midi, midifile);
+    midifile=[FileName, '.mat'];
+    save(midifile, 'M');
 
+    % ABC output
     command=[FileName, '.abc'];
     outfile=fopen(command,'w');
     fprintf(outfile,'X: 1\nT: %s\nM: 4/4\nL: 1/4\nK: %s\n', ...
@@ -142,6 +168,7 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
         system(command);
     end
 
+    save toto;
 end
 
 

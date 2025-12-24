@@ -16,28 +16,17 @@ function SonifExample1
 % scale with the same key signatures. The lowest note is C3, which is the
 % second note in the sequence of Bb. The sequence spans 14 notes, which is
 % equivalent to two octaves, in this case from C3 to C5. The output is a
-% file named ENSO.abc, which contains abc notation. Its content is the
-% following:
-%
-% X: 1
-% T: Sonification
-% M: 4/4
-% L: 1/4
-% K: Bb
-% aABf|GeaD|CcAc'|EAFc|
-% ABdB|FBGD|Gdfd|GEBa|
-%
-% Using online tools it is possible to write this out as sheet music (pdf
-% file), as well as audition. Many different free tools are available on 
-% https://abc.rectanglered.com/
+% file named ENSO.abc, which contains abc notation, as well as a MIDI file,
+% named ENSO.mid and ENSO.mat.
+% Using online tools it is possible to translate the abc file in sheet 
+% music (pdf file), as well as audition. Many different free tools are 
+% available on https://abc.rectanglered.com/
 
     sequence=64; % Length of the sequence (16,32,64, ...)
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'Bb'}; % 12 keys to chose from (no sharps, only flats)
     span=14; % Tonal span of the sequence (14 = 2 octaves)
-    fs = 44100;
-    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
-    IPmethod=1;
+    IPmethod=2;
     abc=1; % Use locally installed abc program to make a PDF file with sheet
            % music. (1 or 0)
 
@@ -45,11 +34,9 @@ function SonifExample1
     data=load('ENSOdata.txt');
     % Interpolate the time sequence to the sepcified number of steps definied
     % by sequence
-    signal=Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
-        key,span,fs,duration,'ENSO',IPmethod,abc);
-
+    [signal,fs]=Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
+        key,span,'ENSO',IPmethod,abc);
     sound(signal, fs);
-
     
 end
 

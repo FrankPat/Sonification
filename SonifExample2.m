@@ -11,7 +11,7 @@ function SonifExample2
     close all;
 
 % In this example, the Key is F major (FM7), resulting in B flat as 
-% key signatures. The key is similar to CGminor 7 (Gm7), so if
+% key signatures. The key is similar to G minor 7 (Gm7), so if
 % you want a minor key, you need to provide the key of the associated major
 % scale with the same key signatures. The starting note is G, which is the
 % second note in the sequence of F. The sequence spans 14 notes, whic is
@@ -26,23 +26,21 @@ function SonifExample2
     lowest=2; % Note in scale on which to start the sequence (1-7)
     key={'F'}; % 12 keys to chose from (no sharps, only flats)
     span =14; % Tonal span of the sequence (14 = 2 octaves)
-    IPmethod=3;
-    fs = 44100;
-    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
+    IPmethod=2;
     abc=1; % Write output on pdf file using abc software
 
     data=load('ImbieAntarctica.txt');
     data(:,2)=-data(:,2);
-    signal1=Data2Music(data,1992,2018,sequence,lowest, ...
-        key,span,fs,duration,'AIS',logscale,abc);
+    [signal1,~]=Data2Music(data,1992,2018,sequence,lowest, ...
+        key,span,'AIS',IPmethod,abc);
 
     data=load('ImbieGreenland.txt');
     data(:,2)=-data(:,2);
-    signal2=Data2Music(data,1992,2018,sequence,lowest, ...
-        key,span,fs,duration,'GrIS',logscale,abc);
+    [signal2,fs]=Data2Music(data,1992,2018,sequence,lowest, ...
+        key,span,'GrIS',IPmethod,abc);
 
     % Combine the signals
-    CombinedSignal = signal1;% + signal2;
+    CombinedSignal = signal1 + signal2;
     % Normalize the combined signal to prevent clipping
     CombinedSignal = CombinedSignal / max(abs(CombinedSignal));
     
