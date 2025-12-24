@@ -31,20 +31,15 @@ function SonifExample2
 
     data=load('ImbieAntarctica.txt');
     data(:,2)=-data(:,2);
-    [signal1,~]=Data2Music(data,1992,2018,sequence,lowest, ...
+    Data2Music(data,1992,2018,sequence,lowest, ...
         key,span,'AIS',IPmethod,abc);
 
+    pause(10);
+    
     data=load('ImbieGreenland.txt');
     data(:,2)=-data(:,2);
-    [signal2,fs]=Data2Music(data,1992,2018,sequence,lowest, ...
+    Data2Music(data,1992,2018,sequence,lowest, ...
         key,span,'GrIS',IPmethod,abc);
-
-    % Combine the signals
-    CombinedSignal = signal1 + signal2;
-    % Normalize the combined signal to prevent clipping
-    CombinedSignal = CombinedSignal / max(abs(CombinedSignal));
-    
-    sound(CombinedSignal, fs);
     
 end
 

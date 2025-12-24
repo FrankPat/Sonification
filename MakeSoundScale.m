@@ -1,4 +1,4 @@
-function signal=MakeSoundScale(NewFreq,ScaleIndices,fs,duration)
+function MakeSoundScale(NewFreq,ScaleIndices)
 
 % Function that translates the sequence in a sound signal that can be
 % played with the 'sound' function in MatLab.
@@ -28,6 +28,9 @@ function signal=MakeSoundScale(NewFreq,ScaleIndices,fs,duration)
 % SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
 
+    fs = 44100;
+    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
+    
     % Define sampling rate and tone duration
     t = 0:1/fs:duration - 1/fs; % Time vector for one tone
     
@@ -49,7 +52,8 @@ function signal=MakeSoundScale(NewFreq,ScaleIndices,fs,duration)
 
     % Ensure both signals are the same length by padding with zeros
     signal = padSignal(signal, length(signal));
-
+    signal=signal/max(abs(signal));
+    sound(signal,fs);
 end
 
 

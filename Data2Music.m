@@ -1,4 +1,4 @@
-function [signal,fs]=Data2Music(data,startx,endx,sequence,lowest, ...
+function Data2Music(data,startx,endx,sequence,lowest, ...
     key,span,outfile,IPmethod,abc)
 
 % Function that reads a two column data vector with x and y values, where x
@@ -36,18 +36,13 @@ function [signal,fs]=Data2Music(data,startx,endx,sequence,lowest, ...
 % SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
 
-    fs = 44100;
-    duration=1/4; % 1/4 notes @ 90 bpm = 1/6
-
     % Interpolate the time sequence to the sepcified number of steps definied
     % by sequence
     time=linspace(startx,endx,sequence)';
     var=interp1(data(:,1),data(:,2),time);
     [ScaleIndices,NewFreq] = Sonification(var,lowest,key,span, ...
         outfile,IPmethod,abc);
-
-    signal=MakeSoundScale(NewFreq,ScaleIndices,fs,duration);
-    signal=signal/max(abs(signal));
+    MakeSoundScale(NewFreq,ScaleIndices);
     
     figure;
     subplot(2,1,1)

@@ -34,9 +34,8 @@ function SonifExample1
     data=load('ENSOdata.txt');
     % Interpolate the time sequence to the sepcified number of steps definied
     % by sequence
-    [signal,fs]=Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
+    Data2Music(data,data(1,1),data(end,1),sequence,lowest, ...
         key,span,'ENSO',IPmethod,abc);
-    sound(signal, fs);
     
 end
 
