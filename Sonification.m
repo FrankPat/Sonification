@@ -1,5 +1,5 @@
 function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
-    SeqLength,FileName,IPmethod,flag)
+    SeqLength,FileName,IPmethod,scale,flag)
 
 % Function that transforms any dataseries (preferably a multiple of 8 or 16
 % data points) into a musical sequence.
@@ -12,6 +12,7 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
 % FileName    =  name of outputfile (without extension)
 % IPmethod    =  mapping method: 1: frequency; 2: logarithmic frequency
 %                  (linear scale); 3: equidistant
+% scale       =  type of scale: Major, Pentatonic, Blues (major)
 % flag        =  0: only abc output file is created
 %                1: abc software and ps2pdf is executed to produce a pdf
 %                   file with sheet music
@@ -67,10 +68,19 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
     end
     ScaleNames={'C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'};
     f0=440; % A4 as standard frequency
-    C4s=[-9 -7 -5 -4 -2 0 2]; % Standard C4 to C5 scale, with A4 = 0
+    if cellfun(@strcmp,scale,{'Major'})
+        C4s=[-9 -7 -5 -4 -2 0 2]; % Standard C4 to C5 scale, with A4 = 0
+    elseif cellfun(@strcmp,scale,{'Pentatonic'}) % pentatonic scale
+        C4s=[-9 -7 -5 -2 0];
+    elseif cellfun(@strcmp,scale,{'Blues'}) % minor blues scale
+        C4s=[-9 -7 -6 -5 -2 0];
+    else
+        fprintf('scale options are Major, Pentatonic or MinorBlues\n');
+        return;
+    end
 
-    Scales=zeros(12,29);
-    NewString=strings(12,29);
+    scalelength=length(C4s)*4+1;
+    Scales=zeros(12,scalelength);
     Scales(1,:)=[C4s-24 C4s-12 C4s C4s+12 15]; % Extended C scale to 4 octaves
     for i=2:12
         Scales(i,:)=Scales(1,:)+i-1; % Extend to all other tonalities
@@ -83,30 +93,28 @@ function [ScaleIndices,NewFreq] = Sonification(yData,LowestSeq,Key, ...
             ScaleChoice=i;
         end
     end
-    
-    % abc notation corresponding to matrix Scales
-    strCell = {'C,,','D,,','E,,','F,,','G,,','A,,','B,,', ...
-        'C,','D,','E,','F,','G,','A,','B,', ...
-        'C','D','E','F','G','A','B', ...
-        'c','d','e','f','g','a','b', ...
-        'c''','d''','e''','f''','g''','a''','b'''};
-    strArray=string(strCell);
-    
-    ScaleStart=[1, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 7];
-    for i=1:12
-        NewString(i,:)=strArray(ScaleStart(i):ScaleStart(i)+28); % Extend to all other tonalities
+    % Define whether key signature is flats (1) or sharps (0)
+    FlatsNames={'C','Db','Eb','F','Gb','Ab','Bb'};
+    Flats=0;
+    for i=1:length(FlatsNames)
+        if cellfun(@strcmp,Key,FlatsNames(i))
+            Flats=1;
+        end
     end
-    
+        
     strt=LowestSeq;
     stop=strt+SeqLength;
     while Scales(ScaleChoice,stop)<=4
-        strt=strt+7;
-        stop=stop+7;
+        strt=strt+length(C4s);
+        stop=stop+length(C4s);
     end
     NewScale=Scales(ScaleChoice,strt:stop);
     NewFreq=ScaleFreq(ScaleChoice,strt:stop);
-    NewArray=NewString(ScaleChoice,strt:stop);
-
+    NewArray=strings(1,11);
+    for i=1:length(NewScale)
+        NewArray(i)=string(midi2abc(NewScale(i)+69,Flats));
+    end
+    
     yMin = min(yData);
     yMax = max(yData);
     if IPmethod==1 % frequency

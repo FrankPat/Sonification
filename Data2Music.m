@@ -1,5 +1,5 @@
 function Data2Music(data,startx,endx,sequence,lowest, ...
-    key,span,outfile,IPmethod,abc)
+    key,span,outfile,IPmethod,tonal,abc)
 
 % Function that reads a two column data vector with x and y values, where x
 % is commonly taken as time in a time series, and interpolates a sequence
@@ -41,7 +41,7 @@ function Data2Music(data,startx,endx,sequence,lowest, ...
     time=linspace(startx,endx,sequence)';
     var=interp1(data(:,1),data(:,2),time);
     [ScaleIndices,NewFreq] = Sonification(var,lowest,key,span, ...
-        outfile,IPmethod,abc);
+        outfile,IPmethod,tonal,abc);
     MakeSoundScale(NewFreq,ScaleIndices);
     
     figure;
