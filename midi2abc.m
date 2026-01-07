@@ -17,7 +17,7 @@ function abc_note = midi2abc(midi_pitch,scale)
     % but for ABC notation, we define the "base" octave for mapping.
     % ABC's base octave uses capital letters C-B for MIDI notes 60-71.
     
-    % Octave 4 starts at MIDI note 60. General octave calculation:
+    % Octave 5 starts at MIDI note 60. General octave calculation:
     octave = floor(midi_pitch / 12) - 1;
 
     % Get the basic note name (e.g., 'C', 'D#')
@@ -27,32 +27,29 @@ function abc_note = midi2abc(midi_pitch,scale)
     abc_note = '';
     
     if octave >= 5 % Middle C (note 60) and above
-        % Use capital letters for Octave 4 (C4-B4)
-        % Add apostrophes (') for each octave above Octave 4
+        % Use capital letters for Octave 5 (C5-B5)
+        % Add apostrophes (') for each octave above Octave 5
         if octave == 5
             % Convert to lowercase
             base_name_lower = lower(base_name);
             abc_note = base_name_lower;
         else
-            % Example: Octave 5 (C5) adds one ' -> C'
-            % Octave 6 (C6) adds two ' -> C''
+            % Example: Octave 6 (C6) adds one ' -> C'
+            % Octave 7 (C7) adds two ' -> C''
             apostrophes = repmat('''', 1, octave - 5);
-%             abc_note = [base_name, apostrophes];
             base_name_lower = lower(base_name);
             abc_note = [base_name_lower, apostrophes];
         end
     else % Below Middle C
-        % Use lowercase letters for Octave 3 (c-b)
-        % Add commas (,) for each octave below Octave 3
+        % Use lowercase letters for Octave 4 (c-b)
+        % Add commas (,) for each octave below Octave 4
         if octave == 4
             % Convert to lowercase
             abc_note = base_name;
         else
-            % Example: Octave 2 (c,) adds one ,
+            % Example: Octave 3 (c,) adds one ,
             % Octave 1 (c,,) adds two ,,
             commas = repmat(',', 1, 4 - octave);
-%             base_name_lower = lower(base_name);
-%             abc_note = [base_name_lower, commas];
             abc_note = [base_name, commas];
         end
     end
