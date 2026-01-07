@@ -17,6 +17,9 @@ FileName    =  name of outputfile (without extension)
 
 IPmethod    =  mapping method: 1: frequency; 2: logarithmic frequency
                  (linear scale); 3: equidistant
+
+scale       =  Type of scale. Options are Major Diatonic, Major Pentantonic and Major Blues
+
 flag        =  0: only abc output file is created
                1: abc software and ps2pdf is executed to produce a pdf
                  file with sheet music
