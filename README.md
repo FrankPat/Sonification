@@ -1,6 +1,6 @@
 # Sonification: climate grooves
 
-Function that transforms any dataseries (preferably a multiple of 8 or 16
+Function that transforms any dataseries (preferably a multiple of 8
 data points) into a musical sequence.
 
 INPUT
@@ -18,7 +18,7 @@ FileName    =  name of outputfile (without extension)
 IPmethod    =  mapping method: 1: frequency; 2: logarithmic frequency
                  (linear scale); 3: equidistant
 
-scale       =  Type of scale. Options are Major Diatonic, Major Pentantonic and Major Blues
+scale       =  Type of scale: Major Diatonic, Major Pentantonic and Major Blues
 
 flag        =  0: only abc output file is created
                1: abc software and ps2pdf is executed to produce a pdf
