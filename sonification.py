@@ -83,7 +83,7 @@ def midi2abc(midi_pitch, scale):
 # ----------------------------------------------------------------------
 # Main translated function
 # ----------------------------------------------------------------------
-def sonification(yData, LowestSeq, Key, SeqLength, FileName, IPmethod, scale, flag):
+def sonification(yData, LowestSeq, Key, SeqLength, FileName, IPmethod, scale, MIDI, flag):
     """
     Transform a data series into a musical sequence.
 
@@ -99,6 +99,7 @@ def sonification(yData, LowestSeq, Key, SeqLength, FileName, IPmethod, scale, fl
                     2 = logarithmic frequency (linear scale)
                     3 = equidistant
     scale       : str, one of 'Major', 'Pentatonic', 'Blues'
+    MIDI        : write MIDI file or not
     flag        : int, 0 = only write the .abc file
                         1 = also run abcm2ps + ps2pdf to produce a PDF
                             of the sheet music (requires those tools
@@ -200,8 +201,9 @@ def sonification(yData, LowestSeq, Key, SeqLength, FileName, IPmethod, scale, fl
     M[:, 4] = np.arange(n) * 0.25      # note-on times (s)
     M[:, 5] = M[:, 4] + 0.25           # note-off times (s)
 
-    _write_midi(M, FileName + '.mid')
-    np.save(FileName + '.npy', M)
+    if MIDI == 1:
+        _write_midi(M, FileName + '.mid')
+        np.save(FileName + '.npy', M)
 
     # ---------------- ABC output ----------------
     with open(FileName + '.abc', 'w') as outfile:
